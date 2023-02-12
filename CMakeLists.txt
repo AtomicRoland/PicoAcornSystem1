@@ -17,9 +17,10 @@ include_directories(./lib/font)
 include_directories(./lib/fatfs)
 include_directories(./lib/sdcard)
 
-add_executable(main 
+add_executable(main
 main.c
 )
+target_link_libraries(main hardware_adc system1 lcd font config pico_stdlib hardware_spi pico_multicore)
 
 # enable usb output, disable uart output
 pico_enable_stdio_usb(main 1)
@@ -28,4 +29,3 @@ pico_enable_stdio_uart(main 0)
 # create map/bin/hex/uf2 file etc.
 pico_add_extra_outputs(main)
 
-target_link_libraries(main system1 lcd font config pico_stdlib hardware_spi fatfs pico_multicore)

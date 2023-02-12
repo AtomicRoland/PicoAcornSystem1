@@ -12,11 +12,12 @@ Credits to Mike Chambers
 
 void drawDigit(int pos, int value);
 void readKey(void);
+void readTemp(void);
 uint8_t memory[0x10000] __attribute__((aligned(0x10000)));
 
 uint8_t read6502(uint16_t address) {
     if (address == 0xE20) { readKey(); }
-
+    if (address == 0xE28) { memory[address] = 'T'; }
     return memory[address];
 }
 
@@ -26,6 +27,8 @@ void write6502(uint16_t address, uint8_t value) {
         if (address == 0XE20) { // the upper five bits of this address are I/O inputs and cannot be changed
             memory[0XE20] = (memory[0XE20] & 0xF8) | (value & 0x07);
             drawDigit(value & 0x07, memory[0xE21]);
+        } else if ( address == 0xE28 ) {
+            readTemp();
         } else {
             memory[address] = value;
         }

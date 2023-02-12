@@ -34,8 +34,9 @@
 #include "LCD_Bmp.h"
 #include "DEV_Config.h"
 #include <stdio.h>
-#include "hardware/watchdog.h"
 #include "pico/stdlib.h"
+#include "hardware/watchdog.h"
+#include "/Users/roland/pico/pico-sdk/src/rp2_common/hardware_adc/include/hardware/adc.h"
 
 extern uint8_t memory[0x10000];
 extern uint8_t breakKey;
@@ -350,4 +351,18 @@ void readKey(void) {
         keySense = 0x38;      // No key pressed
     }
     memory[0XE20] = 0xC0 | keySense | scanDrive;
+}
+
+void readTemp(void) {
+    uint16_t raw = adc_read();
+    char tempStr[3];
+    const float conversion_factor = 3.3f / (1<<12);
+    float result = raw * conversion_factor;
+    float temp = 24.5 - (result - 0.706)/0.001721;
+    sprintf(tempStr, "%03d", (int) (temp*10.0));
+    printf("Temp = %f C   tempStr = %s\n", temp, tempStr);
+    memory[0xE28] = 'T';
+    memory[0xE29] = tempStr[0] - 0x30;
+    memory[0xE2A] = tempStr[1] - 0x30;
+    memory[0xE2B] = tempStr[2] - 0x30;
 }
