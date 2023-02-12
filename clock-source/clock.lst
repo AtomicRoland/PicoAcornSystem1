@@ -1,0 +1,290 @@
+.begin
+     0200   20 DF 03   JSR &03DF
+     0203   20 74 03   JSR &0374
+     0206   8D 28 0E   STA &0E28
+.loop1
+     0209   85 0E      STA &0E
+     020B   85 93      STA &93
+.loop2
+     020D   A5 93      LDA &93
+     020F   D0 06      BNE &0217
+     0211   20 2F 02   JSR &022F
+     0214   4C 1A 02   JMP &021A
+.loop3
+     0217   20 79 02   JSR &0279
+.loop4
+     021A   C9 16      CMP #&16
+     021C   F0 76      BEQ &0294
+     021E   C9 17      CMP #&17
+     0220   F0 72      BEQ &0294
+     0222   C9 13      CMP #&13
+     0224   D0 03      BNE &0229
+     0226   4C 74 03   JMP &0374
+.loop5
+     0229   20 9D 02   JSR &029D
+     022C   4C 0D 02   JMP &020D
+.displayTime
+     022F   A2 03      LDX #&03
+.dt1
+     0231   B4 80      LDY &80,X
+     0233   B9 EA FF   LDA &FFEA,Y
+     0236   95 10      STA &10,X
+     0238   CA         DEX
+     0239   10 F6      BPL &0231
+     023B   A5 80      LDA &80
+     023D   D0 04      BNE &0243
+     023F   A9 00      LDA #&00
+     0241   85 10      STA &10
+.dt2
+     0243   A5 90      LDA &90
+     0245   4A         LSR A
+     0246   90 06      BCC &024E
+     0248   A5 11      LDA &11
+     024A   09 80      ORA #&80
+     024C   85 11      STA &11
+.displayTemp
+     024E   AD 28 0E   LDA &0E28
+     0251   C9 54      CMP #&54
+     0253   D0 1A      BNE &026F
+     0255   A2 02      LDX #&02
+.dt3
+     0257   BC 29 0E   LDY &0E29,X
+     025A   B9 EA FF   LDA &FFEA,Y
+     025D   E0 01      CPX #&01
+     025F   D0 02      BNE &0263
+     0261   09 80      ORA #&80
+.dt4
+     0263   95 15      STA &15,X
+     0265   CA         DEX
+     0266   10 EF      BPL &0257
+     0268   A9 00      LDA #&00
+     026A   85 14      STA &14
+.dt5
+     026C   4C 0C FE   JMP &FE0C
+.dt6
+     026F   A9 00      LDA #&00
+     0271   A2 04      LDX #&04
+     0273   20 BD 03   JSR &03BD
+     0276   4C 0C FE   JMP &FE0C
+.displayDate
+     0279   A2 07      LDX #&07
+.dd1
+     027B   B4 88      LDY &88,X
+     027D   B9 EA FF   LDA &FFEA,Y
+     0280   95 10      STA &10,X
+     0282   CA         DEX
+     0283   10 F6      BPL &027B
+     0285   A5 13      LDA &13
+     0287   49 80      EOR #&80
+     0289   85 13      STA &13
+     028B   A5 15      LDA &15
+     028D   49 80      EOR #&80
+     028F   85 15      STA &15
+     0291   4C 0C FE   JMP &FE0C
+.setupdown
+     0294   A5 93      LDA &93
+     0296   49 FF      EOR #&FF
+     0298   85 93      STA &93
+     029A   4C 29 02   JMP &0229
+.updateTime
+     029D   20 C9 03   JSR &03C9
+     02A0   D0 50      BNE &02F2
+     02A2   20 DF 03   JSR &03DF
+     02A5   E6 90      INC &90
+     02A7   A5 90      LDA &90
+     02A9   C9 3C      CMP #&3C
+     02AB   D0 45      BNE &02F2
+     02AD   8D 28 0E   STA &0E28
+     02B0   A9 00      LDA #&00
+     02B2   85 90      STA &90
+     02B4   85 93      STA &93
+     02B6   E6 83      INC &83
+     02B8   A5 83      LDA &83
+     02BA   C9 0A      CMP #&0A
+     02BC   D0 34      BNE &02F2
+     02BE   A9 00      LDA #&00
+     02C0   85 83      STA &83
+     02C2   E6 82      INC &82
+     02C4   A5 82      LDA &82
+     02C6   C9 06      CMP #&06
+     02C8   D0 28      BNE &02F2
+     02CA   A9 00      LDA #&00
+     02CC   85 82      STA &82
+     02CE   E6 81      INC &81
+     02D0   A5 81      LDA &81
+     02D2   C9 04      CMP #&04
+     02D4   D0 12      BNE &02E8
+     02D6   A5 80      LDA &80
+     02D8   C9 02      CMP #&02
+     02DA   D0 0C      BNE &02E8
+     02DC   A9 00      LDA #&00
+     02DE   85 80      STA &80
+     02E0   85 81      STA &81
+     02E2   20 F3 02   JSR &02F3
+     02E5   4C F2 02   JMP &02F2
+.upd1
+     02E8   C9 0A      CMP #&0A
+     02EA   D0 06      BNE &02F2
+     02EC   A9 00      LDA #&00
+     02EE   85 81      STA &81
+     02F0   E6 80      INC &80
+.break
+     02F2   60         RTS
+.updateDate
+     02F3   A6 8E      LDX &8E
+     02F5   BD C5 03   LDA &03C5,X
+     02F8   18         CLC
+     02F9   65 8F      ADC &8F
+     02FB   85 91      STA &91
+     02FD   A6 8C      LDX &8C
+     02FF   BD C5 03   LDA &03C5,X
+     0302   18         CLC
+     0303   65 8D      ADC &8D
+     0305   85 92      STA &92
+     0307   A5 91      LDA &91
+     0309   C9 1C      CMP #&1C
+     030B   30 20      BMI &032D
+     030D   A5 92      LDA &92
+     030F   C9 02      CMP #&02
+     0311   F0 29      BEQ &033C
+     0313   A5 91      LDA &91
+     0315   C9 1E      CMP #&1E
+     0317   30 14      BMI &032D
+     0319   D0 21      BNE &033C
+     031B   A5 92      LDA &92
+     031D   C9 04      CMP #&04
+     031F   F0 1B      BEQ &033C
+     0321   C9 06      CMP #&06
+     0323   F0 17      BEQ &033C
+     0325   C9 09      CMP #&09
+     0327   F0 13      BEQ &033C
+     0329   C9 0B      CMP #&0B
+     032B   F0 0F      BEQ &033C
+.upd28
+     032D   E6 8F      INC &8F
+     032F   A5 8F      LDA &8F
+     0331   C9 0A      CMP #&0A
+     0333   D0 06      BNE &033B
+     0335   A9 00      LDA #&00
+     0337   85 8F      STA &8F
+     0339   E6 8E      INC &8E
+.upd29
+     033B   60         RTS
+.newmonth
+     033C   A9 01      LDA #&01
+     033E   85 8F      STA &8F
+     0340   85 91      STA &91
+     0342   A9 00      LDA #&00
+     0344   85 8E      STA &8E
+     0346   E6 92      INC &92
+     0348   A5 92      LDA &92
+     034A   C9 0D      CMP #&0D
+     034C   F0 0F      BEQ &035D
+     034E   E6 8D      INC &8D
+     0350   A5 8D      LDA &8D
+     0352   C9 0A      CMP #&0A
+     0354   D0 06      BNE &035C
+     0356   A9 00      LDA #&00
+     0358   85 8D      STA &8D
+     035A   E6 8C      INC &8C
+.nm1
+     035C   60         RTS
+.newyear
+     035D   A9 01      LDA #&01
+     035F   85 8D      STA &8D
+     0361   A9 00      LDA #&00
+     0363   85 8C      STA &8C
+     0365   E6 8B      INC &8B
+     0367   A5 8B      LDA &8B
+     0369   C9 0A      CMP #&0A
+     036B   D0 EF      BNE &035C
+     036D   A9 00      LDA #&00
+     036F   85 8B      STA &8B
+     0371   E6 8A      INC &8A
+     0373   60         RTS
+.setclock
+     0374   20 B9 03   JSR &03B9
+     0377   A9 FF      LDA #&FF
+     0379   85 0E      STA &0E
+     037B   20 B9 03   JSR &03B9
+     037E   A2 00      LDX #&00
+     0380   86 90      STX &90
+.set1
+     0382   20 0C FE   JSR &FE0C
+     0385   95 80      STA &80,X
+     0387   A8         TAY
+     0388   B9 EA FF   LDA &FFEA,Y
+     038B   95 10      STA &10,X
+     038D   E8         INX
+     038E   E0 04      CPX #&04
+     0390   D0 F0      BNE &0382
+     0392   20 B9 03   JSR &03B9
+     0395   A2 00      LDX #&00
+.set2
+     0397   20 0C FE   JSR &FE0C
+     039A   95 88      STA &88,X
+     039C   A8         TAY
+     039D   B9 EA FF   LDA &FFEA,Y
+     03A0   95 10      STA &10,X
+     03A2   E8         INX
+     03A3   E0 08      CPX #&08
+     03A5   D0 F0      BNE &0397
+     03A7   A9 00      LDA #&00
+     03A9   20 BB 03   JSR &03BB
+     03AC   4C 09 02   JMP &0209
+.reset
+     03AF   A2 10      LDX #&10
+     03B1   A9 00      LDA #&00
+.rst1
+     03B3   95 80      STA &80,X
+     03B5   CA         DEX
+     03B6   10 FB      BPL &03B3
+     03B8   60         RTS
+.clear
+     03B9   A9 08      LDA #&08
+.clr1
+     03BB   A2 00      LDX #&00
+.clr2
+     03BD   95 10      STA &10,X
+     03BF   E8         INX
+     03C0   E0 08      CPX #&08
+     03C2   D0 F9      BNE &03BD
+     03C4   60         RTS
+.mul10
+     03C5   00
+     03C6   0A
+     03C7   14
+     03C8   1E
+.timer
+     03C9   AD 28 0E   LDA &0E28
+     03CC   C9 54      CMP #&54
+     03CE   F0 0B      BEQ &03DB
+     03D0   C6 94      DEC &94
+     03D2   D0 02      BNE &03D6
+     03D4   C6 95      DEC &95
+.timer2
+     03D6   A5 94      LDA &94
+     03D8   05 95      ORA &95
+     03DA   60         RTS
+.timer3
+     03DB   AD 2C 0E   LDA &0E2C
+     03DE   60         RTS
+.settimer
+     03DF   48         PHA
+     03E0   AD 28 0E   LDA &0E28
+     03E3   C9 54      CMP #&54
+     03E5   F0 0A      BEQ &03F1
+     03E7   A9 2D      LDA #&2D
+     03E9   85 94      STA &94
+     03EB   A9 01      LDA #&01
+     03ED   85 95      STA &95
+.settimer1
+     03EF   68         PLA
+     03F0   60         RTS
+.settimer2
+     03F1   A9 64      LDA #&64
+     03F3   8D 2C 0E   STA &0E2C
+     03F6   68         PLA
+     03F7   60         RTS
+.end
+Saving file 'clock.bin'
